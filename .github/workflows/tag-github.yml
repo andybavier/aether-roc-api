@@ -16,7 +16,6 @@ on:
 
 jobs:
   tag-github:
-    if: github.repository_owner == 'onosproject'
     runs-on: ubuntu-latest
     outputs:
       changed: ${{ steps.version-change.outputs.changed }}
