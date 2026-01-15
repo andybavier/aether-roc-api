@@ -15,12 +15,10 @@ permissions:
   contents: read
 
 jobs:
+  # CAUTION: Other actions depend on this name "tag-github"
   tag-github:
-    permissions:
-      contents: write
-      actions: read
-      id-token: write
-    uses: omec-project/.github/.github/workflows/tag-github.yml@23e0adf45c41d1564468697ae12bae734510e388 # v0.0.4
+    # uses: onosproject/.github/.github/workflows/tag-github.yml@main
+    uses: ./.github/workflows/tag-github.yml
     secrets: inherit
 
   release-image:
@@ -40,25 +38,8 @@ jobs:
 
   update-version:
     needs: tag-github
-    permissions:
-      contents: write
-      pull-requests: write
-      actions: read
-      id-token: write
-    uses: omec-project/.github/.github/workflows/update-version.yml@23e0adf45c41d1564468697ae12bae734510e388 # v0.0.4
+    if: needs.tag-github.outputs.changed == 'true'
+    uses: onosproject/.github/.github/workflows/bump-version.yml@main
+    secrets: inherit
     with:
-      changed: ${{ needs.tag-github.outputs.changed }}
       version: ${{ needs.tag-github.outputs.version }}
-    secrets: inherit
-
-  branch-release:
-    needs: tag-github
-    permissions:
-      contents: write
-      actions: read
-      id-token: write
-    uses: omec-project/.github/.github/workflows/branch-release.yml@23e0adf45c41d1564468697ae12bae734510e388 # v0.0.4
-    with:
-      release_branch: ${{ needs.tag-github.outputs.release_branch }}
-      version_branch: ${{ needs.tag-github.outputs.version_branch }}
-    secrets: inherit
