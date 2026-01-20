@@ -192,7 +192,7 @@ kind: images
 all: build images
 
 publish: # @HELP publish version on github and dockerhub
-	./build/build-tools/publish-version ${VERSION} onosproject/aether-roc-api
+	./build/build-tools/publish-version ${VERSION} andybavier/aether-roc-api
 
 jenkins-publish: # @HELP Jenkins calls this to publish artifacts
 	./build/bin/push-images
