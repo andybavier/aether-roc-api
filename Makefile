@@ -10,6 +10,7 @@ export GO111MODULE=on
 DOCKER_TAG                      ?= latest
 DOCKER_REPOSITORY               ?= onosproject/
 DOCKER_REGISTRY                 ?= ""
+DOCKER_IMAGE                    := ${DOCKER_REPOSITORY}aether-roc-api
 DOCKER_IMAGENAME_API         	:= ${DOCKER_REGISTRY}${DOCKER_REPOSITORY}aether-roc-api:${DOCKER_TAG}
 
 OAPI_CODEGEN_VERSION := v1.7.0
