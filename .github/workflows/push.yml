@@ -38,7 +38,7 @@ jobs:
 
   update-version:
     needs: tag-github
-    if: needs.tag-github.outputs.changed == 'true'
+    if: false
     uses: onosproject/.github/.github/workflows/bump-version.yml@main
     secrets: inherit
     with:

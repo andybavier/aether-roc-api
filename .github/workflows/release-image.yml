@@ -65,10 +65,3 @@ jobs:
         run: |
           make docker-build
           make docker-push
-      
-      - name: Logout from Docker Registry
-        if: always()
-        run: |
-          docker logout ${{ inputs.docker_registry }}
-          docker logout ${{ inputs.github_registry }}
-
