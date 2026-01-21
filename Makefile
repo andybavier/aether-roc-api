@@ -180,6 +180,9 @@ aether-roc-api-docker: # @HELP build aether-roc-api Docker image
 		-t ${DOCKER_IMAGENAME_API}
 	@rm -rf vendor
 
+# For compatibility with GitHub workflows
+docker-build: images
+
 images: # @HELP build all Docker images
 images: build aether-roc-api-docker
 

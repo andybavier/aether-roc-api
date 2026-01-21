@@ -21,37 +21,18 @@ jobs:
     uses: ./.github/workflows/tag-github.yml
     secrets: inherit
 
-
-  check-dockerhub-credentials:
-    runs-on: ubuntu-latest
-    outputs:
-      has_credentials: ${{ steps.check.outputs.has_credentials }}
-    steps:
-      - id: check
-        env:
-          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-          DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
-        run: |
-          if [[ -n "$DOCKERHUB_USERNAME" && -n "$DOCKERHUB_PASSWORD" ]]; then
-            echo "has_credentials=true" >> $GITHUB_OUTPUT
-          else
-            echo "has_credentials=false" >> $GITHUB_OUTPUT
-            echo "::warning::DOCKERHUB_USERNAME or DOCKERHUB_PASSWORD is not set, skipping release-image job"
-          fi
-
   release-image:
-    needs: [tag-github, check-dockerhub-credentials]
-    if: needs.check-dockerhub-credentials.outputs.has_credentials == 'true'
+    needs: tag-github
     permissions:
       contents: read
       packages: write
       actions: read
       id-token: write
       attestations: write
-    uses: omec-project/.github/.github/workflows/release-image.yml@main
+    # uses: omec-project/.github/.github/workflows/release-image.yml@main
+    uses: ./.github/workflows/release-image.yml
     with:
-      # changed: ${{ needs.tag-github.outputs.changed }}
-      changed: 'true'
+      changed: ${{ needs.tag-github.outputs.changed }}
       version: ${{ needs.tag-github.outputs.version }}
       docker_repository: andybavier/
     secrets: inherit
