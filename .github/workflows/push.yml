@@ -23,17 +23,16 @@ jobs:
 
   release-image:
     needs: tag-github
+    if: needs.tag-github.outputs.changed == 'true'
     permissions:
       contents: read
       packages: write
       actions: read
       id-token: write
       attestations: write
-    # uses: omec-project/.github/.github/workflows/release-image.yml@main
     uses: ./.github/workflows/release-image.yml
     with:
-      changed: ${{ needs.tag-github.outputs.changed }}
-      version: ${{ needs.tag-github.outputs.version }}
+      docker_tag: ${{ needs.tag-github.outputs.version }}
       docker_repository: andybavier/
     secrets: inherit
 
