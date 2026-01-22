@@ -6,6 +6,12 @@ name: Tag GitHub
 
 on:
   workflow_call:
+    inputs:
+      add_v:
+        description: "Whether to add a v prefix to the version tag"
+        type: boolean
+        required: false
+        default: false
     outputs:
       changed:
         description: "Whether the VERSION file changed"
@@ -34,6 +40,9 @@ jobs:
           validate="^[0-9]+\.[0-9]+\.[0-9]+$"
           if [[ $version =~ $validate ]]; then
             echo "changed=true" >> $GITHUB_OUTPUT
+            if [[ "${{ inputs.add_v }}" == "true" ]]; then
+              version="v${version}"
+            fi
             echo "version=$version" >> $GITHUB_OUTPUT
           else
             echo "Version change not for release"
