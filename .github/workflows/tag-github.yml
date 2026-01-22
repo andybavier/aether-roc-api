@@ -26,29 +26,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Get changed
-        id: version-file
-        run: |
-          if git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | grep VERSION; then
-            echo "changed=true" >> $GITHUB_OUTPUT
-          else
-            echo "VERSION file was not changed"
-          fi
-
-      - name: Validate change in version file
-        id: version-change
-        if: steps.version-file.outputs.changed == 'true'
-        run: |
-          version=$(cat VERSION)
-          echo "version=$version"
-          validate="^[0-9]+\.[0-9]+\.[0-9]+$"
-          if [[ $version =~ $validate ]]; then
-            echo "changed=true" >> $GITHUB_OUTPUT
-            echo "version=$version" >> $GITHUB_OUTPUT
-          else
-            echo "Version change not for release"
-          fi
-
       - name: Create Github release
         if: steps.version-change.outputs.changed == 'true'
         uses: onosproject/.github/.github/actions/create-github-release-action@main
