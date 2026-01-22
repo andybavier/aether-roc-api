@@ -26,6 +26,19 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Validate change in version file
+        id: version-change
+        run: |
+          version=$(cat VERSION)
+          echo "version=$version"
+          validate="^[0-9]+\.[0-9]+\.[0-9]+$"
+          if [[ $version =~ $validate ]]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "version=$version" >> $GITHUB_OUTPUT
+          else
+            echo "Version change not for release"
+          fi
+
       - name: Create Github release
         if: steps.version-change.outputs.changed == 'true'
         uses: onosproject/.github/.github/actions/create-github-release-action@main
